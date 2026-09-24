@@ -1,6 +1,8 @@
 package com.library.catalog.book.exceptions;
 
-public class BookNotFound extends RuntimeException {
+import com.library.catalog.exceptions.NotFoundException;
+
+public class BookNotFound extends NotFoundException {
     public BookNotFound(String message) {
         super(message);
     }
