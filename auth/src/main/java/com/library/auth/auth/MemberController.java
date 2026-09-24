@@ -1,10 +1,10 @@
 package com.library.auth.auth;
 
+import com.library.auth.auth.dto.AuthResponse;
 import com.library.auth.auth.dto.LoginMember;
 import com.library.auth.auth.dto.RegisterMember;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.authentication.*;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -14,7 +14,7 @@ public class MemberController {
     private MemberService memberService;
 
     @PostMapping("/login")
-    public String authenticateUser(@Valid @RequestBody LoginMember dto) {
+    public AuthResponse authenticateUser(@Valid @RequestBody LoginMember dto) {
         return memberService.authenticateUser(dto);
     }
     @PostMapping("/register")

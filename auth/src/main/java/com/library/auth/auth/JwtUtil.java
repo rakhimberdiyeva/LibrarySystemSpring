@@ -26,14 +26,24 @@ public class JwtUtil {
         this.key = Keys.hmacShaKeyFor(jwtSecret.getBytes(StandardCharsets.UTF_8));
     }
 
-    public String generateToken(String username) {
+    public String generateToken(Long userId, String username) {
         Date now = new Date();
         return Jwts.builder()
                 .subject(username)
+                .claim("userId", userId)
                 .issuedAt(now)
                 .expiration(new Date(now.getTime() + jwtExpirationMs))
                 .signWith(key)
                 .compact();
+    }
+
+    public Long getUserIdFromToken(String token) {
+        return Jwts.parser()
+                .verifyWith(key)
+                .build()
+                .parseSignedClaims(token)
+                .getPayload()
+                .get("userId", Long.class);
     }
 
     public String getUsernameFromToken(String token) {

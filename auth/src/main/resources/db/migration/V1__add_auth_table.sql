@@ -1,5 +1,5 @@
 CREATE TABLE IF NOT EXISTS members(
-    id SERIAL PRIMARY KEY,
+    id BIGINT PRIMARY KEY,
     username VARCHAR(128) NOT NULL UNIQUE,
     password_hash TEXT,
     fullname VARCHAR(128) NOT NULL,

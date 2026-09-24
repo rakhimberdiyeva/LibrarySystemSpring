@@ -1,5 +1,6 @@
 package com.library.auth.auth;
 
+import com.library.auth.auth.dto.AuthResponse;
 import com.library.auth.auth.dto.LoginMember;
 import com.library.auth.auth.dto.RegisterMember;
 import com.library.auth.auth.exceptions.EmailAlreadyExists;
@@ -23,15 +24,13 @@ public class MemberService {
     @Autowired
     PasswordEncoder encoder;
 
-    public String authenticateUser(LoginMember dto) {
+    public AuthResponse authenticateUser(LoginMember dto) {
         Authentication authentication = authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(
-                        dto.getUsername(),
-                        dto.getPassword()
-                )
+                new UsernamePasswordAuthenticationToken(dto.getUsername(), dto.getPassword())
         );
-        UserDetails userDetails = (UserDetails) authentication.getPrincipal();
-        return jwtUtils.generateToken(userDetails.getUsername());
+        CustomUserDetails user = (CustomUserDetails) authentication.getPrincipal();
+        String token = jwtUtils.generateToken(user.getId(), user.getUsername());
+        return new AuthResponse(token, user.getId(), user.getUsername());
     }
 
     public void registerUser(RegisterMember dto) {
