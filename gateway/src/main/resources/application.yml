@@ -42,6 +42,16 @@ spring:
               uri: ${CATALOG_SERVICE_URL:http://localhost:8082}
               predicates:
                 - Path=/api/books/**, /api/authors/**, /api/admin/books/**, /api/admin/authors/**
+            - id: loan-service-docs
+              uri: ${LOAN_SERVICE_URL:http://localhost:8083}
+              predicates:
+                - Path=/api/loan/v3/api-docs
+              filters:
+                - RewritePath=/api/loan/v3/api-docs, /v3/api-docs
+            - id: loan-service
+              uri: ${LOAN_SERVICE_URL:http://localhost:8083}
+              predicates:
+                - Path=/api/loans/**, /api/admin/loans/**
 
 #
 #jwt:
@@ -83,3 +93,5 @@ springdoc:
         url: /api/auth/v3/api-docs
       - name: catalog-service
         url: /api/catalog/v3/api-docs
+      - name: loan-service
+        url: /api/loan/v3/api-docs

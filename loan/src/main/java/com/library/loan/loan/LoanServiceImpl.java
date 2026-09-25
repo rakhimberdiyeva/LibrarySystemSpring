@@ -1,11 +1,10 @@
 package com.library.loan.loan;
 
+import com.library.loan.loan.dto.BookResponse;
 import com.library.loan.loan.dto.LoanCreateRequest;
 import com.library.loan.loan.dto.LoanResponse;
 import com.library.loan.loan.dto.LoanUpdateRequest;
-import com.library.loan.loan.exceptions.BookAlreadyReturned;
-import com.library.loan.loan.exceptions.BorrowLimitReached;
-import com.library.loan.loan.exceptions.LoanNotFound;
+import com.library.loan.loan.exceptions.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -19,40 +18,45 @@ public class LoanServiceImpl implements LoanService{
     @Autowired
     private LoanMapper loanMapper;
 
+    @Autowired
+    private CatalogClient catalogClient;
+
     @Override
-    public LoanResponse createLoan(LoanCreateRequest dto) {
-        // TODO: check book id
-        if (canBorrow(dto.getMemberId())){
+    public LoanResponse borrowBook(long userId, LoanCreateRequest dto) {
+        if (canBorrow(userId)){
             throw new BorrowLimitReached("borrow limit reached");
         }
+        BookResponse book = catalogClient.getBook(dto.getBookId());
+        if (book.getCopiesAvailable() < 0){
+            throw new BookNotAvailable("book is not available");
+        }
         Loan loan = new Loan();
-        loan.setMemberId(dto.getMemberId());
+        loan.setMemberId(userId);
         loan.setBookId(dto.getBookId());
         loan.setBorrowDate(dto.getBorrowDate());
+        catalogClient.reserveBook(book.getId());
         return loanMapper.toDto(loanRepository.save(loan));
     }
 
     @Override
-    public LoanResponse updateReturnDate(long id, LoanUpdateRequest dto) {
-        // TODO: check for owner
+    public LoanResponse returnBook(long userId, long id, LoanUpdateRequest dto) {
         Loan loan = loanRepository.findById(id).orElseThrow(() ->  new LoanNotFound("loan not found: " + id));
+        if (loan.getMemberId() != userId){
+            throw new NotLoanOwner("users can update only their loan");
+        }
         if (loan.getReturnDate() != null){
             throw new BookAlreadyReturned("book already returned error");
         }
-
         if (dto.getReturnDate() != null){
             loan.setReturnDate(dto.getReturnDate());
         }
+        catalogClient.releaseBook(loan.getBookId());
         return loanMapper.toDto(loanRepository.save(loan));
     }
 
     @Override
     public void deleteLoan(long id) {
-        // TODO: check for admin
         Loan loan = loanRepository.findById(id).orElseThrow(() ->  new LoanNotFound("loan not found: " + id));
-        if (loan.getReturnDate() != null){
-            throw new BookAlreadyReturned("book already returned error");
-        }
         loanRepository.delete(loan);
     }
 
@@ -69,7 +73,6 @@ public class LoanServiceImpl implements LoanService{
     }
 
     @Override
-    // TODO: check for admin
     public List<LoanResponse> getNotReturnedLoans() {
         List<Loan> loans = loanRepository.findByReturnDateIsNull();
         return loans.stream().map(l -> loanMapper.toDto(l)).toList();

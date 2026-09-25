@@ -15,4 +15,6 @@ public interface BookService {
     List<BookResponse> getAllBooks();
     boolean hasAvailableCopies(long id);
     List<BookResponse> searchBook(String search);
+    void reserveBook(long id);
+    void releaseBook(long id);
 }

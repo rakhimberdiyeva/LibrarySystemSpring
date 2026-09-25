@@ -2,7 +2,9 @@ package com.library.catalog.book;
 
 import com.library.catalog.book.dto.BookCreateRequest;
 import com.library.catalog.book.dto.BookResponse;
+import com.library.catalog.book.exceptions.BookCopiesConflict;
 import com.library.catalog.book.exceptions.BookNotFound;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -18,6 +20,9 @@ public class BookServiceImpl implements BookService{
 
     @Override
     public BookResponse createBook(BookCreateRequest dto) {
+        if (dto.getCopiesAvailable() > dto.getCopiesTotal()){
+            throw new BookCopiesConflict("available books can not be more than total books count");
+        }
         Book book = bookRepository.save(bookMapper.toEntity(dto));
         return bookMapper.toDto(book);
     }
@@ -68,5 +73,18 @@ public class BookServiceImpl implements BookService{
     public List<BookResponse> searchBook(String search) {
         List<Book> books = bookRepository.searchByTitleOrDesc(search);
         return books.stream().map(b -> bookMapper.toDto(b)).toList();
+    }
+
+    @Override
+    @Transactional
+    public void reserveBook(long id) {
+        System.out.println("service");
+        bookRepository.reserveBook(id);
+    }
+
+    @Override
+    @Transactional
+    public void releaseBook(long id) {
+        bookRepository.releaseBook(id);
     }
 }

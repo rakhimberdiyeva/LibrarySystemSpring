@@ -9,8 +9,8 @@ import java.util.List;
 
 @Service
 public interface LoanService {
-    LoanResponse createLoan(LoanCreateRequest dto);
-    LoanResponse updateReturnDate(long id, LoanUpdateRequest dto);
+    LoanResponse borrowBook(long userId, LoanCreateRequest dto);
+    LoanResponse returnBook(long userId, long id, LoanUpdateRequest dto);
     void deleteLoan(long id);
     LoanResponse getLoanById(long id);
     List<LoanResponse> getAllLoans();

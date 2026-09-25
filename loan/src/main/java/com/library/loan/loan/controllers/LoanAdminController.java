@@ -1,28 +1,17 @@
-package com.library.loan.loan;
+package com.library.loan.loan.controllers;
 
-import com.library.loan.loan.dto.LoanCreateRequest;
+import com.library.loan.loan.LoanServiceImpl;
 import com.library.loan.loan.dto.LoanResponse;
-import com.library.loan.loan.dto.LoanUpdateRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
-@RequestMapping("api/loan")
-public class LoanController {
+@RequestMapping("api/admin/loans")
+public class LoanAdminController {
     @Autowired
     private LoanServiceImpl loanService;
-
-    @PostMapping("/")
-    public LoanResponse createLoan(@RequestBody LoanCreateRequest dto){
-        return loanService.createLoan(dto);
-    }
-
-    @PutMapping("/{id}/return")
-    public LoanResponse updateReturnDate(@PathVariable long id, @RequestBody LoanUpdateRequest dto){
-        return loanService.updateReturnDate(id, dto);
-    }
 
     @DeleteMapping("/{id}")
     public void deleteLoan(@PathVariable long id){
