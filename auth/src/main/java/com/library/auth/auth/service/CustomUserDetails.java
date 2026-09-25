@@ -1,5 +1,6 @@
-package com.library.auth.auth;
+package com.library.auth.auth.service;
 
+import com.library.auth.auth.model.Member;
 import lombok.Getter;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;

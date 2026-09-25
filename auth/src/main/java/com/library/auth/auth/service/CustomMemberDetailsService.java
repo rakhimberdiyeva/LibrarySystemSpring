@@ -1,12 +1,12 @@
-package com.library.auth.auth;
+package com.library.auth.auth.service;
 
 import com.library.auth.auth.exceptions.UsernameNotFound;
+import com.library.auth.auth.model.Member;
+import com.library.auth.auth.repository.MemberRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Service;
-
-import java.util.Collections;
 
 @Service
 public class CustomMemberDetailsService implements UserDetailsService {
@@ -18,10 +18,6 @@ public class CustomMemberDetailsService implements UserDetailsService {
         if (member == null) {
             throw new UsernameNotFound("username not found " + username);
         }
-        return new org.springframework.security.core.userdetails.User(
-                member.getUsername(),
-                member.getPasswordHash(),
-                Collections.emptyList()
-        );
+        return new CustomUserDetails(member);
     }
 }

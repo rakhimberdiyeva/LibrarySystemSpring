@@ -1,5 +1,7 @@
-package com.library.auth.auth;
+package com.library.auth.auth.security;
 
+import com.library.auth.auth.AuthEntryPointJwt;
+import com.library.auth.auth.service.CustomMemberDetailsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

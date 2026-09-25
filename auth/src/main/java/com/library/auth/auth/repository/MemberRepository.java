@@ -1,5 +1,6 @@
-package com.library.auth.auth;
+package com.library.auth.auth.repository;
 
+import com.library.auth.auth.model.Member;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

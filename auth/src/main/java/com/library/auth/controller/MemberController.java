@@ -1,8 +1,10 @@
-package com.library.auth.auth;
+package com.library.auth.controller;
 
 import com.library.auth.auth.dto.AuthResponse;
 import com.library.auth.auth.dto.LoginMember;
+import com.library.auth.auth.dto.RefreshTokenRequest;
 import com.library.auth.auth.dto.RegisterMember;
+import com.library.auth.auth.service.MemberService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -21,5 +23,9 @@ public class MemberController {
     public String registerUser(@Valid @RequestBody RegisterMember dto) {
         memberService.registerUser(dto);
         return "User registered successfully!";
+    }
+    @PostMapping("/refresh")
+    public AuthResponse refreshToken(@Valid @RequestBody RefreshTokenRequest dto) {
+        return memberService.refresh(dto);
     }
 }

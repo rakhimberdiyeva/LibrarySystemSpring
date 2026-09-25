@@ -1,5 +1,6 @@
-package com.library.auth.auth;
+package com.library.auth.auth.security;
 
+import com.library.auth.auth.service.CustomMemberDetailsService;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
