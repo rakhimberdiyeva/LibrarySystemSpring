@@ -1,0 +1,85 @@
+server:
+  port: 8080
+
+spring:
+  application:
+    name: gateway-service
+  cloud:
+    gateway:
+      server:
+        webflux:
+          httpclient:
+            connect-timeout: 3000
+            response-timeout: 15s
+          globalcors:
+            cors-configurations:
+              '[/**]':
+                allowed-origins: ${CORS_ALLOWED_ORIGINS:http://localhost:3000}
+                allowed-methods: [GET, POST, PUT, PATCH, DELETE, OPTIONS]
+                allowed-headers: "*"
+                allow-credentials: true
+                max-age: 3600
+          default-filters:
+            - DedupeResponseHeader=Access-Control-Allow-Origin Access-Control-Allow-Credentials, RETAIN_UNIQUE
+          routes:
+            - id: auth-service-docs
+              uri: ${AUTH_SERVICE_URL:http://localhost:8081}
+              predicates:
+                - Path=/api/auth/v3/api-docs
+              filters:
+                - RewritePath=/api/auth/v3/api-docs, /v3/api-docs
+            - id: auth-service
+              uri: ${AUTH_SERVICE_URL:http://localhost:8081}
+              predicates:
+                - Path=/api/auth/**, /api/members/**, /api/admin/members/**
+            - id: catalog-service-docs
+              uri: ${CATALOG_SERVICE_URL:http://localhost:8082}
+              predicates:
+                - Path=/api/catalog/v3/api-docs
+              filters:
+                - RewritePath=/api/catalog/v3/api-docs, /v3/api-docs
+            - id: catalog-service
+              uri: ${CATALOG_SERVICE_URL:http://localhost:8082}
+              predicates:
+                - Path=/api/books/**, /api/authors/**, /api/admin/books/**, /api/admin/authors/**
+
+#
+#jwt:
+#  secret: ${JWT_SECRET}
+
+jwt:
+  secret: ${JWT_SECRET:TKeTCX6fdfIMV8YDjk0Sski3gRmCCn2iNgAdTKF67eq}
+
+gateway:
+  security:
+    public-paths:
+      - /api/auth/login
+      - /api/auth/register
+      - /api/auth/refresh
+      - /api/*/v3/api-docs
+      - GET:/api/books/**
+      - GET:/api/authors/**
+    role-rules:
+      - path: /api/admin/**
+        roles: [ROLE_ADMIN]
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,gateway
+  endpoint:
+    health:
+      probes:
+        enabled: true
+
+springdoc:
+  api-docs:
+    enabled: ${SWAGGER_ENABLED:true}
+  swagger-ui:
+    enabled: ${SWAGGER_ENABLED:true}
+    urls:
+      - name: auth-service
+        url: /api/auth/v3/api-docs
+      - name: catalog-service
+        url: /api/catalog/v3/api-docs

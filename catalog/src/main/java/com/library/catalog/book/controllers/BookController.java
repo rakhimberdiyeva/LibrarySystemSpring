@@ -1,5 +1,6 @@
-package com.library.catalog.book;
+package com.library.catalog.book.controllers;
 
+import com.library.catalog.book.BookServiceImpl;
 import com.library.catalog.book.dto.BookCreateRequest;
 import com.library.catalog.book.dto.BookResponse;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,21 +13,6 @@ import java.util.List;
 public class BookController {
     @Autowired
     private BookServiceImpl bookService;
-
-    @PostMapping("/")
-    public BookResponse createBook(@RequestBody BookCreateRequest request){
-        return bookService.createBook(request);
-    }
-
-    @PutMapping("/{id}")
-    public BookResponse updateBook(@RequestBody BookCreateRequest request, @PathVariable long id){
-        return bookService.updateBook(id, request);
-    }
-
-    @DeleteMapping("/{id}")
-    public void deleteBook(@PathVariable long id){
-        bookService.deleteBook(id);
-    }
 
     @GetMapping("/{id}")
     public BookResponse getBookById(@PathVariable long id){

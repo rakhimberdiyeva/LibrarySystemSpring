@@ -1,4 +1,4 @@
-package com.library.auth.controller;
+package com.library.auth.auth.controller;
 
 import com.library.auth.auth.dto.AuthResponse;
 import com.library.auth.auth.dto.LoginMember;
