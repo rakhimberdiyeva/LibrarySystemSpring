@@ -17,15 +17,14 @@ import java.util.stream.Collectors;
 
 @Service
 public class AuthorServiceImpl implements AuthorServices{
-    @Autowired
-    private AuthorMapper authorMapper;
-
-    @Autowired
-    private AuthorRepository authorRepository;
+    private final AuthorMapper authorMapper;
+    private final AuthorRepository authorRepository;
 
     private final RedisTemplate<String, Object> redisTemplate;
 
-    public AuthorServiceImpl(RedisTemplate<String, Object> redisTemplate) {
+    public AuthorServiceImpl(AuthorMapper authorMapper, AuthorRepository authorRepository, RedisTemplate<String, Object> redisTemplate) {
+        this.authorMapper = authorMapper;
+        this.authorRepository = authorRepository;
         this.redisTemplate = redisTemplate;
     }
 
@@ -42,12 +41,12 @@ public class AuthorServiceImpl implements AuthorServices{
         if (dto.getFullname() != null){
             author.setFullname(dto.getFullname());
         }
-        if (dto.getFullname() != null){
+        if (dto.getBirthDate() != null){
             author.setBirthDate(dto.getBirthDate());
         }
         String key = "author:" + id;
         redisTemplate.delete(key);
-        return authorMapper.toDto(author);
+        return authorMapper.toDto(authorRepository.save(author));
     }
 
     @Override
@@ -105,6 +104,9 @@ public class AuthorServiceImpl implements AuthorServices{
     @Override
     public List<AuthorResponse> searchByName(String name) {
         List<Author> authors = authorRepository.searchByName(name);
+        if (authors.isEmpty()){
+            throw new AuthorNotFound("authors with this name not found");
+        }
         return authors.stream().map(a -> authorMapper.toDto(a)).toList();
     }
 }

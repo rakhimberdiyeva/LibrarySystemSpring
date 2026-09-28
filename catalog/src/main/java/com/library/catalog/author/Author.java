@@ -25,4 +25,9 @@ public class Author {
     @OneToMany(mappedBy = "author", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<Book> books;
 
+    public Author(String fullname, LocalDate birthDate, List<Book> books) {
+        this.fullname = fullname;
+        this.birthDate = birthDate;
+        this.books = books;
+    }
 }
