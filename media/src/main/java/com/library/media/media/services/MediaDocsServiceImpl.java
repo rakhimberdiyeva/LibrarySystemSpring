@@ -1,0 +1,67 @@
+package com.library.media.media.services;
+
+import com.library.media.media.BookResponse;
+import com.library.media.media.CatalogClient;
+import com.library.media.media.MediaCover;
+import com.library.media.media.MediaDocs;
+import com.library.media.media.repostirory.MediaCoverRepository;
+import com.library.media.media.repostirory.MediaDocsRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
+import software.amazon.awssdk.core.sync.RequestBody;
+import software.amazon.awssdk.services.s3.S3Client;
+import software.amazon.awssdk.services.s3.model.PutObjectRequest;
+import software.amazon.awssdk.services.s3.presigner.S3Presigner;
+import software.amazon.awssdk.services.s3.presigner.model.GetObjectPresignRequest;
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.time.Duration;
+import java.util.UUID;
+
+@Service
+public class MediaDocsServiceImpl implements MediaDocsService{
+    private final S3Client client;
+    private final S3Presigner presigner;
+
+    @Value("${minio.bucket2}")
+    private String bucket2;
+
+    @Autowired
+    private CatalogClient catalogClient;
+
+    @Autowired
+    private MediaDocsRepository mediaDocsRepository;
+
+    public MediaDocsServiceImpl(S3Client client, S3Presigner presigner) {
+        this.client = client;
+        this.presigner = presigner;
+    }
+
+    public String uploadDocs(long userId, MultipartFile file) throws IOException {
+        String filename = UUID.randomUUID() + "-" + file.getOriginalFilename();
+
+        PutObjectRequest request = PutObjectRequest.builder()
+                .bucket(bucket2)
+                .key(filename)
+                .contentType(file.getContentType())
+                .build();
+
+        try (InputStream stream = file.getInputStream()) {
+            client.putObject(request, RequestBody.fromInputStream(stream, file.getSize()));
+        }
+        mediaDocsRepository.save(new MediaDocs(userId, filename));
+        return filename;
+    }
+
+    public String  downloadDocs(String filename) {
+        return presigner.presignGetObject(
+                GetObjectPresignRequest.builder()
+                        .signatureDuration(Duration.ofMinutes(15))
+                        .getObjectRequest(b -> b.bucket(bucket2).key(filename))
+                        .build()
+        ).url().toString();
+    }
+}

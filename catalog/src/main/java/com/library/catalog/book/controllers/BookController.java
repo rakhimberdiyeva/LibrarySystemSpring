@@ -1,9 +1,13 @@
 package com.library.catalog.book.controllers;
 
+import com.library.catalog.PageResponse;
 import com.library.catalog.book.BookServiceImpl;
 import com.library.catalog.book.dto.BookCreateRequest;
 import com.library.catalog.book.dto.BookResponse;
+import org.springdoc.core.annotations.ParameterObject;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -20,8 +24,8 @@ public class BookController {
     }
 
     @GetMapping("/")
-    public List<BookResponse> getAll(){
-        return bookService.getAllBooks();
+    public PageResponse<BookResponse> getAll(@ParameterObject @PageableDefault(size = 20, sort = "id") Pageable pageable) {
+        return bookService.getAllBooks(pageable);
     }
 
     @GetMapping("/search/{name}")

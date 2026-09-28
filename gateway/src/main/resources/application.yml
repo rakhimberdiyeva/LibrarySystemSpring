@@ -52,6 +52,16 @@ spring:
               uri: ${LOAN_SERVICE_URL:http://localhost:8083}
               predicates:
                 - Path=/api/loans/**, /api/admin/loans/**
+            - id: media-service-docs
+              uri: ${MEDIA_SERVICE_URL:http://localhost:8085}
+              predicates:
+                - Path=/api/media/v3/api-docs
+              filters:
+                - RewritePath=/api/media/v3/api-docs, /v3/api-docs
+            - id: media-service
+              uri: ${MEDIA_SERVICE_URL:http://localhost:8085}
+              predicates:
+                - Path=/api/media/**, /api/admin/media/**
 
 #
 #jwt:
@@ -95,3 +105,5 @@ springdoc:
         url: /api/catalog/v3/api-docs
       - name: loan-service
         url: /api/loan/v3/api-docs
+      - name: media-service
+        url: /api/media/v3/api-docs

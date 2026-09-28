@@ -1,5 +1,9 @@
 package com.library.catalog.book;
 
+import com.library.catalog.author.Author;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -20,4 +24,7 @@ public interface BookRepository extends JpaRepository<Book, Long> {
     @Modifying
     @Query("UPDATE Book b SET b.copiesAvailable = b.copiesAvailable + 1 WHERE b.id = :bookId")
     void releaseBook(@Param("bookId") long bookId);
+
+    @EntityGraph(attributePaths = "author")
+    Page<Book> findAll(Pageable pageable);
 }

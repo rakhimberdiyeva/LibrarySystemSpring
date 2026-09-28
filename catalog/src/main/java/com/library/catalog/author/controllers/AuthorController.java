@@ -1,8 +1,12 @@
 package com.library.catalog.author.controllers;
 
+import com.library.catalog.PageResponse;
 import com.library.catalog.author.AuthorServiceImpl;
 import com.library.catalog.author.dto.AuthorResponse;
+import org.springdoc.core.annotations.ParameterObject;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -19,8 +23,8 @@ public class AuthorController {
     }
 
     @GetMapping("/")
-    public List<AuthorResponse> getAll(){
-        return authorService.getAllAuthors();
+    public PageResponse<AuthorResponse> getAll(@ParameterObject @PageableDefault(size = 20, sort = "id") Pageable pageable){
+        return authorService.getAllAuthors(pageable);
     }
 
     @GetMapping("/search/{name}")
