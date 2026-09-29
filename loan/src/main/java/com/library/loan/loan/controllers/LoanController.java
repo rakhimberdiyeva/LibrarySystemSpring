@@ -2,6 +2,7 @@ package com.library.loan.loan.controllers;
 
 import com.library.loan.loan.LoanServiceImpl;
 import com.library.loan.loan.dto.LoanCreateRequest;
+import com.library.loan.loan.dto.LoanFinesResponse;
 import com.library.loan.loan.dto.LoanResponse;
 import com.library.loan.loan.dto.LoanUpdateRequest;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -22,7 +23,7 @@ public class LoanController {
     }
 
     @PutMapping("/{id}/return")
-    public LoanResponse returnBook(@Parameter(hidden = true) @RequestHeader("X-User-Id") Long userId, @PathVariable long id, @RequestBody LoanUpdateRequest dto){
+    public LoanFinesResponse returnBook(@Parameter(hidden = true) @RequestHeader("X-User-Id") Long userId, @PathVariable long id, @RequestBody LoanUpdateRequest dto){
         return loanService.returnBook(userId, id, dto);
     }
 

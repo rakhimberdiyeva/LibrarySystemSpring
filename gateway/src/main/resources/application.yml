@@ -51,7 +51,7 @@ spring:
             - id: loan-service
               uri: ${LOAN_SERVICE_URL:http://localhost:8083}
               predicates:
-                - Path=/api/loans/**, /api/admin/loans/**
+                - Path=/api/loans/**, /api/admin/loans/**, /api/admin/report/**
             - id: media-service-docs
               uri: ${MEDIA_SERVICE_URL:http://localhost:8085}
               predicates:
@@ -62,6 +62,16 @@ spring:
               uri: ${MEDIA_SERVICE_URL:http://localhost:8085}
               predicates:
                 - Path=/api/media/**, /api/admin/media/**
+            - id: notification-service-docs
+              uri: ${NOTIFICATION_SERVICE_URL:http://localhost:8086}
+              predicates:
+                - Path=/api/notification/v3/api-docs
+              filters:
+                - RewritePath=/api/notification/v3/api-docs, /v3/api-docs
+            - id: notification-service
+              uri: ${NOTIFICATION_SERVICE_URL:http://localhost:8086}
+              predicates:
+                - Path=/api/notification/**, /api/admin/notification/**
 
 #
 #jwt:
@@ -107,3 +117,5 @@ springdoc:
         url: /api/loan/v3/api-docs
       - name: media-service
         url: /api/media/v3/api-docs
+      - name: notification-service
+        url: /api/notification/v3/api-docs

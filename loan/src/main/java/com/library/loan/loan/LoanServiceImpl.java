@@ -1,13 +1,12 @@
 package com.library.loan.loan;
 
-import com.library.loan.loan.dto.BookResponse;
-import com.library.loan.loan.dto.LoanCreateRequest;
-import com.library.loan.loan.dto.LoanResponse;
-import com.library.loan.loan.dto.LoanUpdateRequest;
+import com.library.loan.loan.dto.*;
 import com.library.loan.loan.exceptions.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
+import java.time.temporal.ChronoUnit;
 import java.util.List;
 
 @Service
@@ -20,6 +19,9 @@ public class LoanServiceImpl implements LoanService{
 
     @Autowired
     private CatalogClient catalogClient;
+
+    @Autowired
+    private NotificationPublisher notificationPublisher;
 
     @Override
     public LoanResponse borrowBook(long userId, LoanCreateRequest dto) {
@@ -35,11 +37,12 @@ public class LoanServiceImpl implements LoanService{
         loan.setBookId(dto.getBookId());
         loan.setBorrowDate(dto.getBorrowDate());
         catalogClient.reserveBook(book.getId());
+        notificationPublisher.publish(new NotificationCreate(userId, NotificationType.BOOK_BORROWED, "book borrowed: " + loan.getBookId()));
         return loanMapper.toDto(loanRepository.save(loan));
     }
 
     @Override
-    public LoanResponse returnBook(long userId, long id, LoanUpdateRequest dto) {
+    public LoanFinesResponse returnBook(long userId, long id, LoanUpdateRequest dto) {
         Loan loan = loanRepository.findById(id).orElseThrow(() ->  new LoanNotFound("loan not found: " + id));
         if (loan.getMemberId() != userId){
             throw new NotLoanOwner("users can update only their loan");
@@ -50,8 +53,11 @@ public class LoanServiceImpl implements LoanService{
         if (dto.getReturnDate() != null){
             loan.setReturnDate(dto.getReturnDate());
         }
+        long fine = checkForFine(loan);
         catalogClient.releaseBook(loan.getBookId());
-        return loanMapper.toDto(loanRepository.save(loan));
+        loanRepository.save(loan);
+        notificationPublisher.publish(new NotificationCreate(userId, NotificationType.BOOK_RETURNED, "book returned: " + loan.getBookId()));
+        return new LoanFinesResponse(fine);
     }
 
     @Override
@@ -87,5 +93,15 @@ public class LoanServiceImpl implements LoanService{
     private boolean canBorrow(long memberId) {
         List<Loan> loans = loanRepository.findByMemberIdAndReturnDateIsNull(memberId);
         return loans.size() >= 3;
+    }
+
+    long checkForFine(Loan loan) {
+        LocalDate dueDate = loan.getBorrowDate().plusDays(14);
+        LocalDate today = LocalDate.now();
+        if (today.isAfter(dueDate)) {
+            long daysOverdue = ChronoUnit.DAYS.between(dueDate, today);
+            return Math.toIntExact(daysOverdue * 2);
+        }
+        return 0;
     }
 }
