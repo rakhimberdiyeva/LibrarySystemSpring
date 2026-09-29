@@ -8,6 +8,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -39,12 +40,13 @@ public class NotificationServiceImpl implements NotificationService{
         return notificationRepository.findByMemberId(memberId).stream().map(n -> notificationMapper.toDto(n)).toList();
     }
 
+    @Transactional
     @Override
-    public NotificationResponse markAsRead(long memberId, long id) {
+    public void markAsRead(long memberId, long id) {
         Notification notification = notificationRepository.findById(id).orElseThrow(() -> new NotificationNotFound("notification not found"));
         if (notification.getMemberId() != memberId){
             throw new NotNotificationOwner("can't access this notification");
         }
-        return notificationMapper.toDto(notificationRepository.markAsRead(id));
+         notificationRepository.markAsRead(id);
     }
 }

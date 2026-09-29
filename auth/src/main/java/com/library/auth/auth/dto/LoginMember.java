@@ -12,6 +12,5 @@ public class LoginMember {
     private String username;
 
     @NotBlank
-    @ValidPassword
     private String password;
 }

@@ -16,10 +16,10 @@ import java.net.URI;
 @Configuration
 public class S3ClientConfig {
 
-    @Value("${minio.accessKey}")
+    @Value("${minio.access-key}")
     private String accessKey;
 
-    @Value("${minio.secretKey}")
+    @Value("${minio.secret-key}")
     private String secretKey;
 
     @Value("${minio.endpoint}")

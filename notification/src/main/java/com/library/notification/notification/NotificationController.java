@@ -19,8 +19,8 @@ public class NotificationController {
     }
 
     @PutMapping("/{id}")
-    public NotificationResponse getUserNotifications(@Parameter(hidden = true) @RequestHeader("X-User-Id") Long userId, @PathVariable long id){
-        return notificationService.markAsRead(userId, id);
+    public void getUserNotifications(@Parameter(hidden = true) @RequestHeader("X-User-Id") Long userId, @PathVariable long id){
+         notificationService.markAsRead(userId, id);
     }
 
 }

@@ -11,5 +11,5 @@ public interface NotificationService {
      NotificationResponse create(NotificationCreate notificationCreate);
      NotificationResponse getById(long id);
      List<NotificationResponse> getMemberNotifications(long memberId);
-     NotificationResponse markAsRead(long memberId, long id);
+     void markAsRead(long memberId, long id);
 }

@@ -23,62 +23,62 @@ spring:
             - DedupeResponseHeader=Access-Control-Allow-Origin Access-Control-Allow-Credentials, RETAIN_UNIQUE
           routes:
             - id: auth-service-docs
-              uri: ${AUTH_SERVICE_URL:http://localhost:8081}
+              uri: ${AUTH_SERVICE_URL:http://auth-service:8081}
               predicates:
                 - Path=/api/auth/v3/api-docs
               filters:
                 - RewritePath=/api/auth/v3/api-docs, /v3/api-docs
             - id: auth-service
-              uri: ${AUTH_SERVICE_URL:http://localhost:8081}
+              uri: ${AUTH_SERVICE_URL:http://auth-service:8081}
               predicates:
                 - Path=/api/auth/**, /api/members/**, /api/admin/members/**
             - id: catalog-service-docs
-              uri: ${CATALOG_SERVICE_URL:http://localhost:8082}
+              uri: ${CATALOG_SERVICE_URL:http://catalog-service:8082}
               predicates:
                 - Path=/api/catalog/v3/api-docs
               filters:
                 - RewritePath=/api/catalog/v3/api-docs, /v3/api-docs
             - id: catalog-service
-              uri: ${CATALOG_SERVICE_URL:http://localhost:8082}
+              uri: ${CATALOG_SERVICE_URL:http://catalog-service:8082}
               predicates:
                 - Path=/api/books/**, /api/authors/**, /api/admin/books/**, /api/admin/authors/**
             - id: loan-service-docs
-              uri: ${LOAN_SERVICE_URL:http://localhost:8083}
+              uri: ${LOAN_SERVICE_URL:http://loan-service:8083}
               predicates:
                 - Path=/api/loan/v3/api-docs
               filters:
                 - RewritePath=/api/loan/v3/api-docs, /v3/api-docs
             - id: loan-service
-              uri: ${LOAN_SERVICE_URL:http://localhost:8083}
+              uri: ${LOAN_SERVICE_URL:http://loan-service:8083}
               predicates:
                 - Path=/api/loans/**, /api/admin/loans/**, /api/admin/report/**
             - id: media-service-docs
-              uri: ${MEDIA_SERVICE_URL:http://localhost:8085}
+              uri: ${MEDIA_SERVICE_URL:http://media-service:8085}
               predicates:
                 - Path=/api/media/v3/api-docs
               filters:
                 - RewritePath=/api/media/v3/api-docs, /v3/api-docs
             - id: media-service
-              uri: ${MEDIA_SERVICE_URL:http://localhost:8085}
+              uri: ${MEDIA_SERVICE_URL:http://media-service:8085}
               predicates:
                 - Path=/api/media/**, /api/admin/media/**
             - id: notification-service-docs
-              uri: ${NOTIFICATION_SERVICE_URL:http://localhost:8086}
+              uri: ${NOTIFICATION_SERVICE_URL:http://notification-service:8086}
               predicates:
                 - Path=/api/notification/v3/api-docs
               filters:
                 - RewritePath=/api/notification/v3/api-docs, /v3/api-docs
             - id: notification-service
-              uri: ${NOTIFICATION_SERVICE_URL:http://localhost:8086}
+              uri: ${NOTIFICATION_SERVICE_URL:http://notification-service:8086}
               predicates:
                 - Path=/api/notification/**, /api/admin/notification/**
 
-#
-#jwt:
-#  secret: ${JWT_SECRET}
 
 jwt:
-  secret: ${JWT_SECRET:TKeTCX6fdfIMV8YDjk0Sski3gRmCCn2iNgAdTKF67eq}
+  secret: ${JWT_SECRET}
+
+#jwt:
+#  secret: ${JWT_SECRET:TKeTCX6fdfIMV8YDjk0Sski3gRmCCn2iNgAdTKF67eq}
 
 gateway:
   security:

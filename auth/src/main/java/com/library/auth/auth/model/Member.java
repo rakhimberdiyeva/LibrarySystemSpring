@@ -56,4 +56,12 @@ public class Member {
         this.fullname = fullname;
         this.email = email;
     }
+
+    public Member(String username, @Nullable String passwordHash, String fullname, String email, MemberRole memberRole) {
+        this.username = username;
+        this.passwordHash = passwordHash;
+        this.fullname = fullname;
+        this.email = email;
+        this.role = memberRole;
+    }
 }

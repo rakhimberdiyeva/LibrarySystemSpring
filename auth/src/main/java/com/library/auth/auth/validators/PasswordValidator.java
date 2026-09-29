@@ -9,7 +9,7 @@ public class PasswordValidator implements ConstraintValidator<ValidPassword, Str
         if (value == null || value.isBlank()) {
             return false;
         }
-        if (value.length() < 8) {
+        if (value.length() <= 8) {
             return false;
         }
         return  value.chars().anyMatch(Character::isUpperCase) &&

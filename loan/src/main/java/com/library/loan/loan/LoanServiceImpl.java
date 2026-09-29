@@ -29,7 +29,7 @@ public class LoanServiceImpl implements LoanService{
             throw new BorrowLimitReached("borrow limit reached");
         }
         BookResponse book = catalogClient.getBook(dto.getBookId());
-        if (book.getCopiesAvailable() < 0){
+        if (book.getCopiesAvailable() <= 0){
             throw new BookNotAvailable("book is not available");
         }
         Loan loan = new Loan();
