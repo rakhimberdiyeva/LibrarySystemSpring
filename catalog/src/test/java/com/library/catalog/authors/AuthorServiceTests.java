@@ -1,14 +1,14 @@
 package com.library.catalog.authors;
 
-import com.library.catalog.PageResponse;
-import com.library.catalog.author.Author;
-import com.library.catalog.author.AuthorMapper;
-import com.library.catalog.author.AuthorRepository;
-import com.library.catalog.author.AuthorServiceImpl;
+import com.library.catalog.dto.PageResponse;
+import com.library.catalog.author.models.Author;
+import com.library.catalog.author.mappers.AuthorMapper;
+import com.library.catalog.author.repository.AuthorRepository;
+import com.library.catalog.author.services.AuthorServiceImpl;
 import com.library.catalog.author.dto.AuthorCreateRequest;
 import com.library.catalog.author.dto.AuthorResponse;
 import com.library.catalog.author.exceptions.AuthorNotFound;
-import com.library.catalog.book.Book;
+import com.library.catalog.book.models.Book;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

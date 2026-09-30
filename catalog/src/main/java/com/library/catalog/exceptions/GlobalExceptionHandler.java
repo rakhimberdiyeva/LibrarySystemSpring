@@ -12,6 +12,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(NotFoundException.class)
     public ResponseEntity<ErrorResponse> handleNotFound(NotFoundException ex) {
         ErrorResponse error = new ErrorResponse(
+                404,
                 ex.getMessage(),
                 LocalDateTime.now().toString()
         );
@@ -21,6 +22,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(ConflictException.class)
     public ResponseEntity<ErrorResponse> handleConflict(ConflictException ex) {
         ErrorResponse error = new ErrorResponse(
+                409,
                 ex.getMessage(),
                 LocalDateTime.now().toString()
         );
@@ -30,6 +32,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ErrorResponse> handleAll(Exception ex) {
         ErrorResponse error = new ErrorResponse(
+                500,
                 ex.getMessage(),
                 LocalDateTime.now().toString()
         );

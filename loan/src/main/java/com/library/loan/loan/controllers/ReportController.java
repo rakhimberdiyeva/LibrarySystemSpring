@@ -1,8 +1,9 @@
 package com.library.loan.loan.controllers;
 
-import com.library.loan.loan.Loan;
-import com.library.loan.loan.LoanMapper;
-import com.library.loan.loan.ReportServiceImpl;
+import com.library.loan.loan.dto.ApiResponse;
+import com.library.loan.loan.models.Loan;
+import com.library.loan.loan.mappers.LoanMapper;
+import com.library.loan.loan.services.ReportServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -21,23 +22,23 @@ public class ReportController {
     private LoanMapper loanMapper;
 
     @GetMapping("/all")
-    public Map<Loan, Long> getOverdueLoans(){
+    public ApiResponse<Map<Loan, Long>> getOverdueLoans(){
         Map<Loan, Long> loans = reportService.getOverdueLoans();
-        return loans;
+        return new ApiResponse<>(200, "success", loans);
     }
 
     @GetMapping("/total")
-    public long totalFines(){
-        return reportService.totalFines();
+    public ApiResponse<Long> totalFines(){
+        return new ApiResponse<>(200, "sucess", reportService.totalFines());
     }
 
     @GetMapping("/most-fines")
-    public Optional<Long> mostFines(){
-        return reportService.mostFines();
+    public ApiResponse<Optional<Long>> mostFines(){
+        return new ApiResponse<>(200, "success", reportService.mostFines());
     }
 
     @GetMapping("/most-borrowed")
-    public Optional<Long> mostBorrowed(){
-        return reportService.mostBorrowed();
+    public ApiResponse<Optional<Long>>mostBorrowed(){
+        return new ApiResponse<>(200, "success", reportService.mostBorrowed());
     }
 }

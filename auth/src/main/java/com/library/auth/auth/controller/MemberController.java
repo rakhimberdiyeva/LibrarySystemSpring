@@ -1,9 +1,6 @@
 package com.library.auth.auth.controller;
 
-import com.library.auth.auth.dto.AuthResponse;
-import com.library.auth.auth.dto.LoginMember;
-import com.library.auth.auth.dto.RefreshTokenRequest;
-import com.library.auth.auth.dto.RegisterMember;
+import com.library.auth.auth.dto.*;
 import com.library.auth.auth.service.MemberService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,16 +13,15 @@ public class MemberController {
     private MemberService memberService;
 
     @PostMapping("/login")
-    public AuthResponse authenticateUser(@Valid @RequestBody LoginMember dto) {
-        return memberService.authenticateUser(dto);
+    public ApiResponse<AuthResponse> authenticateUser(@Valid @RequestBody LoginMember dto) {
+        return new ApiResponse<>(200, "success", memberService.authenticateUser(dto));
     }
     @PostMapping("/register")
-    public String registerUser(@Valid @RequestBody RegisterMember dto) {
-        memberService.registerUser(dto);
-        return "User registered successfully!";
+    public ApiResponse<RegisterResponse> registerUser(@Valid @RequestBody RegisterMember dto) {
+        return new ApiResponse<>(201, "success", memberService.registerUser(dto));
     }
     @PostMapping("/refresh")
-    public AuthResponse refreshToken(@Valid @RequestBody RefreshTokenRequest dto) {
-        return memberService.refresh(dto);
+    public ApiResponse<AuthResponse> refreshToken(@Valid @RequestBody RefreshTokenRequest dto) {
+        return new ApiResponse<>(200, "success", memberService.refresh(dto));
     }
 }

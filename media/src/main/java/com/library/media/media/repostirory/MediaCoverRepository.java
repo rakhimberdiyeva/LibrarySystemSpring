@@ -1,6 +1,6 @@
 package com.library.media.media.repostirory;
 
-import com.library.media.media.MediaCover;
+import com.library.media.media.models.MediaCover;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

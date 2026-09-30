@@ -1,5 +1,6 @@
 package com.library.media.media.controllers;
 
+import com.library.media.media.dto.ApiResponse;
 import com.library.media.media.services.MediaCoverServiceImpl;
 import io.swagger.v3.oas.annotations.Parameter;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,15 +17,17 @@ public class MediaAdminController {
     private MediaCoverServiceImpl mediaCoverService;
 
     @PostMapping(value = "/upload/{bookId}/cover", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public String uploadCover(
+    public ApiResponse<String> uploadCover(
             @PathVariable Long bookId,
             @Parameter(hidden = true) @RequestHeader("X-User-Id") Long userId,
             @RequestPart("file") MultipartFile file) throws IOException {
-        return mediaCoverService.uploadCover(userId, bookId, file);
+        String filename = mediaCoverService.uploadCover(userId, bookId, file);
+        return new ApiResponse<>(200, "success", filename);
     }
 
     @GetMapping("/download/cover/{filename}")
-    public String  downloadCover(@PathVariable String filename){
-        return mediaCoverService.downloadCover(filename);
+    public ApiResponse<String>  downloadCover(@PathVariable String filename){
+        String url = mediaCoverService.downloadCover(filename);
+        return new ApiResponse<>(200, "success", url);
     }
 }

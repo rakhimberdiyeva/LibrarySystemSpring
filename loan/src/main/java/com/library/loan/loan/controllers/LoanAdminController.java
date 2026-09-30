@@ -1,6 +1,7 @@
 package com.library.loan.loan.controllers;
 
-import com.library.loan.loan.LoanServiceImpl;
+import com.library.loan.loan.dto.ApiResponse;
+import com.library.loan.loan.services.LoanServiceImpl;
 import com.library.loan.loan.dto.LoanResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -14,27 +15,28 @@ public class LoanAdminController {
     private LoanServiceImpl loanService;
 
     @DeleteMapping("/{id}")
-    public void deleteLoan(@PathVariable long id){
+    public ApiResponse deleteLoan(@PathVariable long id){
         loanService.deleteLoan(id);
+        return new ApiResponse<>(204, "success", null);
     }
 
     @GetMapping("/{id}")
-    public LoanResponse getLoanById(@PathVariable long id){
-        return loanService.getLoanById(id);
+    public ApiResponse<LoanResponse> getLoanById(@PathVariable long id){
+        return new ApiResponse<>(200, "success", loanService.getLoanById(id));
     }
 
     @GetMapping("/")
-    public List<LoanResponse> getAllLoans(){
-        return loanService.getAllLoans();
+    public ApiResponse<List<LoanResponse>> getAllLoans(){
+        return new ApiResponse<>(200, "success", loanService.getAllLoans());
     }
 
     @GetMapping("/not-returned")
-    public List<LoanResponse> getNotReturnedLoans(){
-        return loanService.getNotReturnedLoans();
+    public ApiResponse<List<LoanResponse>> getNotReturnedLoans(){
+        return new ApiResponse<>(200, "success", loanService.getNotReturnedLoans());
     }
 
     @GetMapping("/user/{id}")
-    public List<LoanResponse> getMemberLoans(@PathVariable long id){
-        return loanService.getMemberLoans(id);
+    public ApiResponse<List<LoanResponse>> getMemberLoans(@PathVariable long id){
+        return new ApiResponse<>(200, "success", loanService.getMemberLoans(id));
     }
 }

@@ -40,7 +40,6 @@ public class AdminSeeder implements ApplicationRunner {
     @Transactional
     public void run(ApplicationArguments args) {
         if (email.isBlank() || password.isBlank()) {
-            log.info("ADMIN_EMAIL/ADMIN_PASSWORD not set, skipping admin seed");
             return;
         }
         if (memberRepository.existsByEmail(email)) {

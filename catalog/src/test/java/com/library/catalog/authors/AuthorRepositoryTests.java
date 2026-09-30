@@ -1,8 +1,8 @@
 package com.library.catalog.authors;
 
-import com.library.catalog.author.Author;
-import com.library.catalog.author.AuthorRepository;
-import com.library.catalog.book.Book;
+import com.library.catalog.author.models.Author;
+import com.library.catalog.author.repository.AuthorRepository;
+import com.library.catalog.book.models.Book;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

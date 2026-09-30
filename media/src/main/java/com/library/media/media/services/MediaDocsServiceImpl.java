@@ -1,10 +1,6 @@
 package com.library.media.media.services;
 
-import com.library.media.media.BookResponse;
-import com.library.media.media.CatalogClient;
-import com.library.media.media.MediaCover;
-import com.library.media.media.MediaDocs;
-import com.library.media.media.repostirory.MediaCoverRepository;
+import com.library.media.media.models.MediaDocs;
 import com.library.media.media.repostirory.MediaDocsRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;

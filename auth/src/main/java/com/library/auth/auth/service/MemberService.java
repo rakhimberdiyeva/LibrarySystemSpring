@@ -1,11 +1,8 @@
 package com.library.auth.auth.service;
 
-import com.library.auth.auth.dto.RefreshTokenRequest;
+import com.library.auth.auth.dto.*;
 import com.library.auth.auth.model.RefreshToken;
 import com.library.auth.auth.security.JwtUtil;
-import com.library.auth.auth.dto.AuthResponse;
-import com.library.auth.auth.dto.LoginMember;
-import com.library.auth.auth.dto.RegisterMember;
 import com.library.auth.auth.exceptions.EmailAlreadyExists;
 import com.library.auth.auth.exceptions.UsernameAlreadyExists;
 import com.library.auth.auth.model.Member;
@@ -46,7 +43,7 @@ public class MemberService {
         return new AuthResponse(accessToken, refreshToken, user.getId(), user.getUsername());
     }
 
-    public void registerUser(RegisterMember dto) {
+    public RegisterResponse registerUser(RegisterMember dto) {
         if (memberRepository.existsByUsername(dto.getUsername())) {
             throw new UsernameAlreadyExists("username already exists");
         }
@@ -60,6 +57,7 @@ public class MemberService {
                 dto.getEmail()
         );
         memberRepository.save(member);
+        return new RegisterResponse(member.getUsername(), member.getEmail());
     }
 
     @Transactional

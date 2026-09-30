@@ -1,6 +1,5 @@
 package com.library.catalog.book.dto;
 
-import com.library.catalog.author.Author;
 import com.library.catalog.author.dto.AuthorResponse;
 import lombok.Data;
 

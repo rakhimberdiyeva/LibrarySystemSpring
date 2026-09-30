@@ -1,12 +1,11 @@
 package com.library.catalog.book.controllers;
 
-import com.library.catalog.book.BookServiceImpl;
+import com.library.catalog.book.dto.ApiResponse;
+import com.library.catalog.book.services.BookServiceImpl;
 import com.library.catalog.book.dto.BookCreateRequest;
 import com.library.catalog.book.dto.BookResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @RestController
 @RequestMapping("/api/admin/books")
@@ -15,18 +14,20 @@ public class BookAdminController {
     private BookServiceImpl bookService;
 
     @PostMapping("/")
-    public BookResponse createBook(@RequestBody BookCreateRequest request){
-        return bookService.createBook(request);
+    public ApiResponse<BookResponse> createBook(@RequestBody BookCreateRequest request){
+        return new ApiResponse<>(201, "success", bookService.createBook(request));
     }
 
     @PutMapping("/{id}")
-    public BookResponse updateBook(@RequestBody BookCreateRequest request, @PathVariable long id){
-        return bookService.updateBook(id, request);
+    public ApiResponse<BookResponse> updateBook(@RequestBody BookCreateRequest request, @PathVariable long id){
+        return new ApiResponse<>(200, "success", bookService.updateBook(id, request));
     }
 
     @DeleteMapping("/{id}")
-    public void deleteBook(@PathVariable long id){
+    public ApiResponse deleteBook(@PathVariable long id){
         bookService.deleteBook(id);
+        return new ApiResponse<>(200, "success", null);
+
     }
 
 }
