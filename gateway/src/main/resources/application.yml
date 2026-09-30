@@ -74,24 +74,24 @@ spring:
                 - Path=/api/notification/**, /api/admin/notification/**
 
 
-jwt:
-  secret: ${JWT_SECRET}
+#jwt:
+#  secret: ${JWT_SECRET}
 
 #jwt:
 #  secret: ${JWT_SECRET:TKeTCX6fdfIMV8YDjk0Sski3gRmCCn2iNgAdTKF67eq}
 
-gateway:
-  security:
-    public-paths:
-      - /api/auth/login
-      - /api/auth/register
-      - /api/auth/refresh
-      - /api/*/v3/api-docs
-      - GET:/api/books/**
-      - GET:/api/authors/**
-    role-rules:
-      - path: /api/admin/**
-        roles: [ROLE_ADMIN]
+#gateway:
+#  security:
+#    public-paths:
+#      - /api/auth/login
+#      - /api/auth/register
+#      - /api/auth/refresh
+#      - /api/*/v3/api-docs
+#      - GET:/api/books/**
+#      - GET:/api/authors/**
+#    role-rules:
+#      - path: /api/admin/**
+#        roles: [ROLE_ADMIN]
 
 management:
   endpoints:

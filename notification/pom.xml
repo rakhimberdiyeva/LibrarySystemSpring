@@ -95,6 +95,10 @@
 			<artifactId>hibernate-core</artifactId>
 			<version>7.4.9.Final</version>
 		</dependency>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-security-oauth2-resource-server</artifactId>
+		</dependency>
 	</dependencies>
 
 	<build>
