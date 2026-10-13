@@ -14,7 +14,7 @@ public class AuthorAdminController {
     @Autowired
     private AuthorServiceImpl authorService;
 
-    @PostMapping("/")
+    @PostMapping({"", "/"})
     public ApiResponse<AuthorResponse> createAuthor(@RequestBody AuthorCreateRequest request){
         return new ApiResponse<>(201, "success", authorService.createAuthor(request));
     }

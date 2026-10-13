@@ -18,14 +18,14 @@ public class LoanController {
     @Autowired
     private LoanServiceImpl loanService;
 
-    @PostMapping("/")
+    @PostMapping({"", "/"})
     public ApiResponse<LoanResponse> borrow(@AuthenticationPrincipal Jwt jwt, @RequestBody LoanCreateRequest dto){
         Long userId = Long.valueOf(jwt.getClaimAsString("userId"));
         return new ApiResponse<>(200, "success", loanService.borrowBook(userId, dto));
     }
 
     @PutMapping("/{id}/return")
-    public ApiResponse<LoanFinesResponse> returnBook(@AuthenticationPrincipal Jwt jwt, @PathVariable long id, @RequestBody LoanUpdateRequest dto){
+    public ApiResponse<LoanFinesResponse> returnBook(@AuthenticationPrincipal Jwt jwt, @PathVariable long id, @RequestBody(required = false) LoanUpdateRequest dto){
         Long userId = Long.valueOf(jwt.getClaimAsString("userId"));
         return new ApiResponse<>(200, "success", loanService.returnBook(userId, id, dto));
     }

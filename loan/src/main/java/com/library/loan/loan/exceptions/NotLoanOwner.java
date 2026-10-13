@@ -1,6 +1,8 @@
 package com.library.loan.loan.exceptions;
 
-public class NotLoanOwner extends RuntimeException {
+import com.library.loan.exceptions.ForbiddenException;
+
+public class NotLoanOwner extends ForbiddenException {
     public NotLoanOwner(String message) {
         super(message);
     }

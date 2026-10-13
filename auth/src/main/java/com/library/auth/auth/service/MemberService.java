@@ -47,7 +47,7 @@ public class MemberService {
         if (memberRepository.existsByUsername(dto.getUsername())) {
             throw new UsernameAlreadyExists("username already exists");
         }
-        if (memberRepository.existsByEmail(dto.getUsername())) {
+        if (memberRepository.existsByEmail(dto.getEmail())) {
             throw new EmailAlreadyExists("email already exists");
         }
         Member member = new Member(

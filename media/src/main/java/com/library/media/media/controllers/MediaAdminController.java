@@ -27,10 +27,4 @@ public class MediaAdminController {
         String filename = mediaCoverService.uploadCover(userId, bookId, file);
         return new ApiResponse<>(200, "success", filename);
     }
-
-    @GetMapping("/download/cover/{filename}")
-    public ApiResponse<String>  downloadCover(@PathVariable String filename){
-        String url = mediaCoverService.downloadCover(filename);
-        return new ApiResponse<>(200, "success", url);
-    }
 }

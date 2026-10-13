@@ -18,12 +18,12 @@ public interface BookRepository extends JpaRepository<Book, Long> {
     List<Book> searchByTitleOrDesc(@Param("search") String search);
 
     @Modifying
-    @Query("UPDATE Book b SET b.copiesAvailable = b.copiesAvailable - 1 WHERE b.id = :bookId")
-    void reserveBook(@Param("bookId") long bookId);
+    @Query("UPDATE Book b SET b.copiesAvailable = b.copiesAvailable - 1 WHERE b.id = :bookId AND b.copiesAvailable > 0")
+    int reserveBook(@Param("bookId") long bookId);
 
     @Modifying
-    @Query("UPDATE Book b SET b.copiesAvailable = b.copiesAvailable + 1 WHERE b.id = :bookId")
-    void releaseBook(@Param("bookId") long bookId);
+    @Query("UPDATE Book b SET b.copiesAvailable = b.copiesAvailable + 1 WHERE b.id = :bookId AND b.copiesAvailable < b.copiesTotal")
+    int releaseBook(@Param("bookId") long bookId);
 
     @EntityGraph(attributePaths = "author")
     Page<Book> findAll(Pageable pageable);

@@ -32,6 +32,7 @@ public class AuthorServiceImpl implements AuthorServices {
     @Override
     public AuthorResponse createAuthor(AuthorCreateRequest dto) {
         Author author = authorRepository.save(authorMapper.toEntity(dto));
+        clearAuthorCache(author.getId());
         return authorMapper.toDto(author);
     }
 
@@ -44,17 +45,23 @@ public class AuthorServiceImpl implements AuthorServices {
         if (dto.getBirthDate() != null){
             author.setBirthDate(dto.getBirthDate());
         }
-        String key = "author:" + id;
-        redisTemplate.delete(key);
-        return authorMapper.toDto(authorRepository.save(author));
+        AuthorResponse response = authorMapper.toDto(authorRepository.save(author));
+        clearAuthorCache(id);
+        return response;
     }
 
     @Override
     public void deleteAuthor(long id) {
         Author author = authorRepository.findById(id).orElseThrow(() -> new AuthorNotFound("author not found, id: " + id));
         authorRepository.deleteById(id);
-        String key = "author:" + id;
-        redisTemplate.delete(key);
+        clearAuthorCache(id);
+    }
+
+    // books embed the author's name, so their cache is cleared too
+    private void clearAuthorCache(long id) {
+        redisTemplate.delete("author:" + id);
+        redisTemplate.delete(redisTemplate.keys("authors:*"));
+        redisTemplate.delete(redisTemplate.keys("book*"));
     }
 
     @Override

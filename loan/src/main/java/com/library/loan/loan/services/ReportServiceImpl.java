@@ -17,7 +17,7 @@ public class ReportServiceImpl implements ReportService {
     private LoanRepository loanRepository;
 
     public Map<Loan, Long> getOverdueLoans(){
-        List<Loan> loans = loanRepository.findAll();
+        List<Loan> loans = loanRepository.findByReturnDateIsNull();
         Map<Loan, Long> fines = new HashMap<>();
         for (Loan loan : loans){
             LocalDate dueDate = loan.getBorrowDate().plusDays(14);

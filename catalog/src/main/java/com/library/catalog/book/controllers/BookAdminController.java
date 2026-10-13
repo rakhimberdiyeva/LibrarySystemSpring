@@ -13,7 +13,7 @@ public class BookAdminController {
     @Autowired
     private BookServiceImpl bookService;
 
-    @PostMapping("/")
+    @PostMapping({"", "/"})
     public ApiResponse<BookResponse> createBook(@RequestBody BookCreateRequest request){
         return new ApiResponse<>(201, "success", bookService.createBook(request));
     }

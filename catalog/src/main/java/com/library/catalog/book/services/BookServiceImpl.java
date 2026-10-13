@@ -37,6 +37,7 @@ public class BookServiceImpl implements BookService {
             throw new BookCopiesConflict("available books can not be more than total books count");
         }
         Book book = bookRepository.save(bookMapper.toEntity(dto));
+        clearBookCache(book.getId());
         return bookMapper.toDto(book);
     }
 
@@ -55,17 +56,15 @@ public class BookServiceImpl implements BookService {
         if (dto.getYear() != 0){
             book.setYear(dto.getYear());
         }
-        String key = "book:" + id;
-        redisTemplate.delete(key);
-        return bookMapper.toDto(book);
+        clearBookCache(id);
+        return bookMapper.toDto(bookRepository.save(book));
     }
 
     @Override
     public void deleteBook(long id) {
         Book book = bookRepository.findById(id).orElseThrow(() -> new BookNotFound("book not found, id: " + id));
         bookRepository.delete(book);
-        String key = "book:" + id;
-        redisTemplate.delete(key);
+        clearBookCache(id);
     }
 
     @Override
@@ -113,13 +112,29 @@ public class BookServiceImpl implements BookService {
     @Override
     @Transactional
     public void reserveBook(long id) {
-        System.out.println("service");
-        bookRepository.reserveBook(id);
+        if (bookRepository.reserveBook(id) == 0) {
+            if (!bookRepository.existsById(id)) {
+                throw new BookNotFound("book not found, id: " + id);
+            }
+            throw new BookCopiesConflict("no available copies, id: " + id);
+        }
+        clearBookCache(id);
     }
 
     @Override
     @Transactional
     public void releaseBook(long id) {
-        bookRepository.releaseBook(id);
+        if (bookRepository.releaseBook(id) == 0) {
+            if (!bookRepository.existsById(id)) {
+                throw new BookNotFound("book not found, id: " + id);
+            }
+            throw new BookCopiesConflict("all copies are already available, id: " + id);
+        }
+        clearBookCache(id);
+    }
+
+    private void clearBookCache(long id) {
+        redisTemplate.delete("book:" + id);
+        redisTemplate.delete(redisTemplate.keys("books:*"));
     }
 }

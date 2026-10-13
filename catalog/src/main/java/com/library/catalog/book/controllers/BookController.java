@@ -23,7 +23,7 @@ public class BookController {
         return new ApiResponse<>(200, "success", bookService.getBookById(id));
     }
 
-    @GetMapping("/")
+    @GetMapping({"", "/"})
     public ApiResponse<PageResponse<BookResponse>> getAll(@ParameterObject @PageableDefault(size = 20, sort = "id") Pageable pageable) {
         return new ApiResponse<>(200, "success", bookService.getAllBooks(pageable));
     }

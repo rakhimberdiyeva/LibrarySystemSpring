@@ -23,7 +23,7 @@ public class AuthorController {
         return new ApiResponse<>(200, "success", authorService.getAuthorById(id));
     }
 
-    @GetMapping("/")
+    @GetMapping({"", "/"})
     public ApiResponse<PageResponse<AuthorResponse>> getAll(@ParameterObject @PageableDefault(size = 20, sort = "id") Pageable pageable){
         return new ApiResponse<>(200, "success", authorService.getAllAuthors(pageable));
     }

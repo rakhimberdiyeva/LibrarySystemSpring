@@ -3,10 +3,12 @@ package com.library.media.media.models;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Entity
 @Data
 @AllArgsConstructor
+@NoArgsConstructor
 @Table(name = "media_covers")
 public class MediaCover{
     @Id

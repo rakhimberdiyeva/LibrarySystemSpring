@@ -32,15 +32,13 @@ public class LoanServiceImpl implements LoanService {
             throw new BorrowLimitReached("borrow limit reached");
         }
         ApiResponse<BookResponse> book = catalogClient.getBook(dto.getBookId());
-        System.out.println(book.getData().getCopiesAvailable());
-        System.out.println(book);
         if (book.getData().getCopiesAvailable() <= 0){
             throw new BookNotAvailable("book is not available");
         }
         Loan loan = new Loan();
         loan.setMemberId(userId);
         loan.setBookId(dto.getBookId());
-        loan.setBorrowDate(dto.getBorrowDate());
+        loan.setBorrowDate(dto.getBorrowDate() != null ? dto.getBorrowDate() : LocalDate.now());
 
         catalogClient.reserveBook(book.getData().getId());
         notificationPublisher.publish(new NotificationCreate(userId, NotificationType.BOOK_BORROWED, "book borrowed: " + loan.getBookId()));
@@ -56,8 +54,10 @@ public class LoanServiceImpl implements LoanService {
         if (loan.getReturnDate() != null){
             throw new BookAlreadyReturned("book already returned error");
         }
-        if (dto.getReturnDate() != null){
+        if (dto != null && dto.getReturnDate() != null){
             loan.setReturnDate(dto.getReturnDate());
+        } else {
+            loan.setReturnDate(LocalDate.now());
         }
         long fine = checkForFine(loan);
         catalogClient.releaseBook(loan.getBookId());
@@ -103,9 +103,9 @@ public class LoanServiceImpl implements LoanService {
 
     long checkForFine(Loan loan) {
         LocalDate dueDate = loan.getBorrowDate().plusDays(14);
-        LocalDate today = LocalDate.now();
-        if (today.isAfter(dueDate)) {
-            long daysOverdue = ChronoUnit.DAYS.between(dueDate, today);
+        LocalDate returnDate = loan.getReturnDate() != null ? loan.getReturnDate() : LocalDate.now();
+        if (returnDate.isAfter(dueDate)) {
+            long daysOverdue = ChronoUnit.DAYS.between(dueDate, returnDate);
             return Math.toIntExact(daysOverdue * 2);
         }
         return 0;

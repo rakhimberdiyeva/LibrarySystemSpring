@@ -25,7 +25,7 @@ public class LoanAdminController {
         return new ApiResponse<>(200, "success", loanService.getLoanById(id));
     }
 
-    @GetMapping("/")
+    @GetMapping({"", "/"})
     public ApiResponse<List<LoanResponse>> getAllLoans(){
         return new ApiResponse<>(200, "success", loanService.getAllLoans());
     }

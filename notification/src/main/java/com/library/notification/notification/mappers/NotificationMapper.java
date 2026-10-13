@@ -8,6 +8,7 @@ import org.springframework.stereotype.Component;
 public class NotificationMapper {
     public NotificationResponse toDto(Notification notification){
         NotificationResponse dto = new NotificationResponse();
+        dto.setId(notification.getId());
         dto.setMemberId(notification.getMemberId());
         dto.setType(notification.getType());
         dto.setMessage(notification.getMessage());
